@@ -1,0 +1,83 @@
+/**
+ * @JsonMvcClient.java
+ * @author sodaChen  E-mail:asframe@qq.com
+ * @version 1.0
+ * <br>Copyright (C)
+ * <br>This program is protected by copyright laws.
+ * <br>Program Name:Keep
+ * <br>Date:2019/11/23
+ */
+package ddybw.core.mvc.client;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import ddybw.core.manager.HttpManager;
+import HttpResponseResult;
+import IRequest;
+import IResponse;
+import ServerConst;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+/**
+ * 以json来发送和请求结果的客户端处理对象
+ * @author sodaChen  E-mail:asframe@qq.com
+ * @version 1.0
+ * <br>Date:2020/7/28
+ */
+public class JsonMvcClient
+{
+    private static Logger logger = LogManager.getLogger(JsonMvcClient.class);
+    private static HttpManager httpManager;
+
+    public static String rootPath = "http://192.168.1.18:9503/";
+    public static void init()
+    {
+        httpManager = HttpManager.getInstance();
+    }
+
+    /**
+     * 发送json数据
+     * @param player 发送玩家
+     * @param url 路径
+     * @param request 请求参数对象
+     */
+    public static void sendJson(Object player,String url, IRequest request)
+    {
+        String fullPath = rootPath + url;
+        String jsonResponse = httpManager.sendPostJson(fullPath,request);
+        HttpResponseResult<JSONObject> responseResult = JSON.parseObject(jsonResponse,HttpResponseResult.class);
+        logger.info(url + " code:" + responseResult.getCode());
+        //判断一下状态
+        if(responseResult.getCode() == ServerConst.Success)
+        {
+            if(responseResult.getData() == null)
+            {
+                return ;
+            }
+            IHttpResponseCmd responseCmd = HttpResponseCmdMgr.getResponseCmd(responseResult.getCmd());
+            if(responseCmd == null)
+            {
+                return ;
+            }
+            //再次转换结果对象
+            IResponse response = (IResponse)responseResult.getData().toJavaObject(responseCmd.getResponseClass());
+            if(response == null)
+            {
+                return ;
+            }
+            try
+            {
+                responseCmd.handleResponse(player,response);
+            }
+            catch (Exception e)
+            {
+                logger.error(e);
+            }
+        }
+        else
+        {
+            //抛出错误代码
+        }
+    }
+}
