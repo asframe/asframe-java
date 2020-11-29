@@ -132,24 +132,6 @@
     <orderEntry type="library" name="Maven: aspectwerkz:aspectwerkz-core:0.8.1" level="project" />
     <orderEntry type="library" name="Maven: com.gitee.sunchenbin.mybatis.actable:mybatis-enhance-actable:1.0.8.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: com.alibaba:druid:1.0.18" level="project" />
-    <orderEntry type="module-library">
-      <library name="Maven: com.alibaba:jconsole:1.8.0">
-        <CLASSES>
-          <root url="jar://D:/Program Files/Java/jdk1.8.0_181/lib/jconsole.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library name="Maven: com.alibaba:tools:1.8.0">
-        <CLASSES>
-          <root url="jar://D:/Program Files/Java/jdk1.8.0_181/lib/tools.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="Maven: mysql:mysql-connector-java:5.1.47" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.restdocs:spring-restdocs-mockmvc:2.0.4.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: javax.servlet:javax.servlet-api:4.0.1" level="project" />
