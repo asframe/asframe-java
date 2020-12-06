@@ -7,18 +7,21 @@
  * <br>Program Name:ASFame
  * <br>Date:2020-10-20
  */
-package com.asframe.game.fight.role;
-
-import com.asframe.game.fight.model.IFightRoleModel;
+package com.asframe.game.fight.rule;
 
 /**
+ *
  * @author sodaChen
  * Date:2020/10/20
  */
-public interface IFightRole {
-    /**
-     * 返回战斗角色模型
-     * @return
-     */
-    IFightRoleModel getFightRoleModel();
+public class IFightRoleRule {
+    private int index;
+    private long roleId;
+    private String name;
+    private int hg;
+    private int maxHg;
+    private int mp;
+    private int maxMp;
+    private int atk;
+    private int dc;
 }
