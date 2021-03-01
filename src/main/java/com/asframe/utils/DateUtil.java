@@ -76,6 +76,23 @@ public final class DateUtil {
       }
 
     /**
+     * 获取精确到秒的时间戳
+     * @return
+     */
+    public static int getSecondTimestamp(Date date){
+        if (null == date) {
+            return 0;
+        }
+        String timestamp = String.valueOf(date.getTime());
+        int length = timestamp.length();
+        if (length > 3) {
+            return Integer.valueOf(timestamp.substring(0,length-3));
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * 两个时间比较结果，true前者大于后者，反之
      *
      * @param date1
@@ -255,6 +272,16 @@ public final class DateUtil {
      */
     public static boolean isTimeOut(long sceTime) {
         return getCurrentSceTime() >= sceTime;
+    }
+
+    /**
+     * 是否已经超时了（传入时间是否小于当前的时间）
+     *
+     * @param sceTime
+     * @return
+     */
+    public static boolean isTimeOutByMillis(long sceTime) {
+        return System.currentTimeMillis() >= sceTime;
     }
 
     /**
@@ -663,6 +690,32 @@ public final class DateUtil {
         calendar.add(Calendar.DAY_OF_MONTH, -1);
         date = calendar.getTime();
         return date;
+    }
+
+    /**
+     * 两个时间相差多少秒
+     *
+     */
+    public static int getDistanceSecondTime(long startTime, long endTime) {
+        long day = 0;
+        long hour = 0;
+        long min = 0;
+        long sec = 0;
+        try {
+            long diff;
+            if (startTime < endTime) {
+                diff = endTime - startTime;
+            } else {
+                diff = startTime - endTime;
+            }
+            day = diff / (24 * 60 * 60 * 1000);
+            hour = (diff / (60 * 60 * 1000) - day * 24);
+            min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
+            sec = (diff / 1000 - day * 24 * 60 * 60 - hour * 60 * 60 - min * 60);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return (int) sec;
     }
 
     /**

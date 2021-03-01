@@ -10,6 +10,6 @@ public enum DaoTypeEnum
 {
     MySql,
     Mybatis,
-    Mongon,
+    Mongodb,
     Redis,
 }

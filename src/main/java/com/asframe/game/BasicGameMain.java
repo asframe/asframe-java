@@ -74,10 +74,10 @@ public abstract class BasicGameMain implements IServerShutdownHook
         logger.info("启动ws服务");
         wsServer = new WssServer();
         try {
-//            if(AppConfig.isWss)
-//            {
-//                wsServer.initSSLContext(AppConfig.Jks_Password,AppConfig.Jks_Path);
-//            }
+            if(GameSession.isWss)
+            {
+                wsServer.initSSLContext(GameSession.Jks_Password,GameSession.Jks_Path);
+            }
             wsServer.init(serverPort, wsHandlerClass);
         }
         catch (Exception e)

@@ -25,6 +25,7 @@ public abstract class BasicPlayer extends Character implements IPlayer
      * 玩家id
      */
     protected long userId;
+
     /**
      * 是否掉线了
      */

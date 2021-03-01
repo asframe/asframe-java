@@ -1,5 +1,6 @@
 package com.asframe.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -89,4 +90,25 @@ public class ListUtils
         }
 
     }
+
+    public static int containSize(List<Integer> list, int value) {
+        int size = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).intValue() == value) {
+                size++;
+            }
+        }
+        return size;
+    }
+
+    public static int noContainSize(List<Integer> list, int value) {
+        int size = 0;
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).intValue() != value) {
+                size++;
+            }
+        }
+        return size;
+    }
+
 }

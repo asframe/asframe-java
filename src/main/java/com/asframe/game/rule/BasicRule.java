@@ -1,8 +1,8 @@
 package com.asframe.game.rule;
 
 import com.asframe.game.exception.RuleConfigException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,10 +18,11 @@ import java.util.Map;
  * @version 1.0
  * @date 2018/10/2
  */
-public class BasicRule<T extends IRuleBean> implements IRule<T>
+//public class BasicRule<T extends IRuleBean> implements IRule<T>
+public class BasicRule<T> implements IRule<T>
 {
 
-    private static Log logger	= LogFactory.getLog(BasicRule.class);
+    private static Logger logger	= LogManager.getLogger(BasicRule.class);
 
     /**
      * 基于默认id存放的数据结构
@@ -88,6 +89,7 @@ public class BasicRule<T extends IRuleBean> implements IRule<T>
         }
         //子类实现初始化相关数据
         this.onInit();
+        int length = this.beanMap.size();
         //统一做个循环回掉
         this.beanMap.forEach((id,bean) ->
         {
@@ -96,7 +98,7 @@ public class BasicRule<T extends IRuleBean> implements IRule<T>
             {
                 this.beanList.add(bean);
             }
-            this.forEachHandle(id,bean);
+            this.forEachHandle(id,bean,length);
         });
         this.onInitEnd();
     }
@@ -124,7 +126,7 @@ public class BasicRule<T extends IRuleBean> implements IRule<T>
      * @param key
      * @param bean
      */
-    protected void forEachHandle(int key,T bean)
+    protected void forEachHandle(int key,T bean,int length)
     {
 
     }

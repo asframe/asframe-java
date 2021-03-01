@@ -25,6 +25,17 @@ public abstract class BasicTcpProtocol extends BaseProtocol implements ITcpProto
      */
     protected byte codeType;
     protected short code;
+    protected short cmd;
+
+    @Override
+    public short getCmd() {
+        return cmd;
+    }
+
+    @Override
+    public void setCmd(short cmd) {
+        this.cmd = cmd;
+    }
 
     public void setCodeType(byte codeType) {
         this.codeType = codeType;

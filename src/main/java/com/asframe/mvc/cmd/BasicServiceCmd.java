@@ -9,6 +9,7 @@
  */
 package com.asframe.mvc.cmd;
 
+import com.asframe.mvc.protocol.read.IHttpRequest;
 import com.asframe.mvc.protocol.write.IHttpResponse;
 import com.asframe.mvc.session.IMvcSession;
 import com.asframe.server.cmd.BasicCmd;

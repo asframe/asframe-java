@@ -11,7 +11,8 @@ import java.util.Map;
  * @version 1.0
  * @date 2018/10/2
  */
-public interface IRule<T extends IRuleBean>
+//public interface IRule<T extends IRuleBean>
+public interface IRule<T>
 {
     /**
      * 规则名字

@@ -9,6 +9,7 @@
  */
 package com.asframe.game.module;
 
+import com.asframe.game.protocol.ITcpProtocol;
 import com.asframe.game.protocol.TcpErrorResponse;
 import com.asframe.game.session.IPlayerSession;
 import com.asframe.server.cmd.BasicCmdProcessor;
@@ -88,7 +89,7 @@ public class TcpCmdProcessor extends BasicCmdProcessor<Short,IPlayerSession> {
     @Override
     public Short sendSuccessResult(IPlayerSession session, short resCmd, IProtocol response)
     {
-        session.sendMessage(resCmd,response);
+        session.sendMessage(resCmd,(ITcpProtocol)response);
         return 0;
     }
 

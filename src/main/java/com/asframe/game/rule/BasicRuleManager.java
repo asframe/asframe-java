@@ -3,18 +3,16 @@ package com.asframe.game.rule;
 import com.asframe.utils.ClassUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 /**
  * 基础策划规则数据管理器，解析规则数据
@@ -24,12 +22,13 @@ import java.util.TreeSet;
  */
 public class BasicRuleManager
 {
-    private static Logger logger = LoggerFactory.getLogger(BasicRuleManager.class);
+    private static Logger logger = LogManager.getLogger(BasicRuleManager.class);
     protected HashMap<String, HashMap<Integer, Object>> jsonMap;
     protected HashMap<String, TreeSet<Integer>> jsonKeyMap;
     protected HashMap<String, IHotUpdateTable> hotUpdateMap;
     protected String packPath;
     protected String jsonPath;
+    protected String rulePackagePath;
 
     protected Class<?> ruleManagerClass;
 
@@ -41,12 +40,11 @@ public class BasicRuleManager
         this.packPath = packPath;
         this.jsonPath = jsonPath;
 
-
         //通过路径获取到所所有json的名字，通过名字匹配绑定   json名字首字母大写，
         //比如 macth.json  对应的Bean  MatchBean
         File file = new File(headPath);
         File[] tempList = file.listFiles();
-        System.out.println("该目录下对象个数:"+ tempList.length);
+        logger.info("该目录下对象个数:"+ tempList.length);
         for (int i = 0; i < tempList.length; i++) {
             if (tempList[i].isFile()) {
                 if(tempList[i].getName().indexOf("orig") != -1){
@@ -55,7 +53,7 @@ public class BasicRuleManager
                 String[] a = tempList[i].getName().split("\\.");
                 String b = a[0]+"Bean";
                 String bean = b.substring(0,1).toUpperCase()+b.substring(1);
-                System.out.println(bean);
+                logger.info("开始处理表:" + tempList[i].getName());
                 parseJsonTable(a[0],packPath+bean,jsonPath+tempList[i].getName(),false);
             }
         }
@@ -77,6 +75,33 @@ public class BasicRuleManager
     }
 
     /**
+     * 根据id获取json数据
+     * @param id
+     * @param className
+     * @param <T>
+     * @return
+     */
+    public <T> T getJsonData(int id, Class<?> className) {
+        HashMap<Integer, Object> list = this.jsonMap.get(className.getName());
+        if(list == null)
+        {
+            new Error(className.getName() + "找不到对应的json存储");
+        }
+        T jsonObject = (T)list.get(id);
+        return jsonObject;
+    }
+
+    /**
+     * 根据id获取数据
+     * @param className
+     * @return
+     */
+    public Map<Integer, Object> getJsonTable(Class<?> className) {
+        HashMap<Integer, Object> map = this.jsonMap.get(className.getName());
+        return map;
+    }
+
+    /**
      * 监听热更完成事件
      * @param hotTable 热更表
      * @param hotUpdateTable 回调接口
@@ -93,7 +118,7 @@ public class BasicRuleManager
         try {
             onwClass = Class.forName(classPath);
         } catch (Exception e) {
-            System.out.println(classPath + "：此类有错误");
+            logger.error(classPath + "：此类有错误");
             return;
         }
         HashMap<Integer, Object> list = new HashMap<>();
@@ -131,6 +156,8 @@ public class BasicRuleManager
         Class clazz = this.ruleManagerClass;
         try
         {
+            fileName = fileName.substring(0, 1).toLowerCase() + fileName.substring(1);
+            //检测是否有对应的静态规则对象
             Field field = clazz.getField(fileName + "Rule");
             if(field != null)
             {
@@ -138,7 +165,7 @@ public class BasicRuleManager
                 //首字母变大写
                 fileName = fileName.substring(0,1).toUpperCase() + fileName.substring(1);
                 //进行自动反射
-                Class<?> ruleClazz = Class.forName("ddz.rule." + fileName + "Rule");
+                Class<?> ruleClazz = Class.forName(this.rulePackagePath + "." + fileName + "Rule");
                 IRule rule = (IRule) ClassUtils.createObject(ruleClazz);
                 field.set(null,rule);
                 //初始化rule
@@ -160,8 +187,10 @@ public class BasicRuleManager
     }
 
 
-
-
+    /**
+     * 获得当前表的json数据
+     * @return
+     */
     public String listJsons(){
         StringBuilder stringBuilder = new StringBuilder();
         jsonMap.keySet().forEach(s -> stringBuilder.append(s).append("<br>"));
@@ -185,7 +214,7 @@ public class BasicRuleManager
         try {
             onwClass = Class.forName(classPath);
         } catch (Exception e) {
-            System.out.println(classPath + "：更新单个表此类有错误");
+            logger.error(classPath + "：更新单个表此类有错误");
             return null;
         }
         HashMap<Integer, Object> list = new HashMap<>();
